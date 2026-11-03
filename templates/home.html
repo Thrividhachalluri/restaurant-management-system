@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Restaurant</title>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg  navbar-dark bg-dark">
+     <div class="container">
+
+        <a class="navbar-brand" href="{% url 'home' %}">
+            My Restaurant
+        </a>
+        ```html
+<form class="mx-auto" style="width: 280px;">
+    <div class="input-group">
+
+        <span class="input-group-text border-0 rounded-start-pill"
+              style="background: #f8f9fa; padding-left: 16px;">
+            <i class="bi bi-search text-warning"></i>
+        </span>
+
+        <input type="search"
+               id="foodSearch"
+               class="form-control border-0 rounded-end-pill"
+               placeholder="What are you craving today?"
+               style="background: #f8f9fa;
+                      font-size: 13px;
+                      box-shadow: none;
+                      height: 40px;">
+    </div>
+</form>
+```
+        <div class="ms-auto">
+            <!-- Add My Cart button here -->
+            <a href="{% url 'cart' %}" class="btn btn-outline-primary">
+                <i class="bi bi-cart"></i> My Cart
+                <span class="badge bg-danger">{{ cart_count }}</span>
+            </a>
+        </div>
+
+    </div>
+</nav>
+<div class="container mt-3">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary">Our Food Menu</h2>
+    <div class="row">
+        {% for item in food_items %}
+        <div class="col-md-4 mb-4 food-card"
+     data-name="{{ item.food_name|lower }}">
+            <div class="card shadow-sm">
+                {%if item.api_image %}
+                <img src="{{item.api_image}}"
+                     class="card-img-top"
+                     alt="{{item.food_name}}"
+                     style="height:220px; object-fit:cover;">
+                {% elif item.image %}
+                <img src="{{item.image.url}}"
+                     class="card-img-top"
+                     style="height:220px; object-fit:cover;">
+                {% else %}
+                <p>Image not available</p>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{item.food_name}}</h5>
+                    <p>{{item.description}}</p>
+                    <p>Category:{{item.category}}</p>
+                    <h5 class="text-success">₹{{item.price}}</h5>
+                    <form action="{% url 'add_to_cart' item.id %}" method="POST">
+                        {% csrf_token %}
+                         <button class="btn btn-warning bi bi-cart4 " type="submit">
+                             Add to cart
+                         </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+        {% empty %}
+        <p>No Food items available.</p>
+        {% endfor %}
+
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.getElementById('foodSearch').addEventListener('input', function() {
+
+    let searchValue = this.value.toLowerCase();
+
+    let foodCards = document.querySelectorAll('.food-card');
+
+    foodCards.forEach(function(card) {
+
+        let foodName = card.getAttribute('data-name');
+
+        if (foodName.includes(searchValue)) {
+            card.style.display = '';
+        }
+        else {
+            card.style.display = 'none';
+        }
+
+    });
+
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Order Confirmation</h2>
+
+{% for item in cart_items %}
+    <p>
+        {{ item.food.food_name }} -
+        {{ item.quantity }} -
+        ₹{{ item.subtotal }}
+    </p>
+{% endfor %}
+
+<h4>Total: ₹{{ total }}</h4>
+
+<a href="{% url 'payment' %}" class="btn btn-primary">
+    Proceed to Payment
+</a>
+
+</body>
+</html>
